@@ -8,6 +8,7 @@ namespace Aethelgard.Models
         public int Level { get; set; }
         public ClassType HeroClass { get; set; }
 
+        public Player(string name, ClassType heroClass) : base(name, 100, 20)
         {
             HeroClass = heroClass;
             Level = 1;
