@@ -1,16 +1,20 @@
-import Karakter from Models.Karakter;
+using System;
 
-class Ellenfel : Karakter.Character
+namespace Aethelgard.Models
 {
-    public int Damage { get; set; }
-    public string Type { get; set; }
-    public Ellenfel(string name, int health, int damage, string type) : base(name, health)
+    public class Enemy : Character
     {
-        Damage = damage;
-        Type = type;
+        public string Type { get; set; }
+
+        public Enemy(string name, int health, int attackPower, string type = "Monster") : base(name, health, attackPower)
+        {
+            Type = type;
+        }
+
+        public int AutoAttack(Character target)
+        {
+            target.Health -= AttackPower;
+            return AttackPower;
+        }
     }
-    public void Attack()
-    {
-        Console.WriteLine($"{Name} attacks with {Damage} damage!");
-    }
-}   
+}

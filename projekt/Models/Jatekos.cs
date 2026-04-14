@@ -1,22 +1,44 @@
-import Karakter from Models.Karakter;
+using System;
 
-class Player : Karakter.Character
+namespace Aethelgard.Models
 {
-    public int Score { get; set; }
-    public int Level { get; set; }
-    public Player(string name, int health, int score, int level) : base(name, health)
+    public class Player : Character
     {
-        Score = score;
-        Level = level;
-    }
-    public void LevelUp()
-    {
-        Level++;
-        Console.WriteLine($"{Name} leveled up to level {Level}!");
-    }
-    public void AddScore(int points)
-    {
-        Score += points;
-        Console.WriteLine($"{Name} gained {points} points! Total score: {Score}");
+        public int Experience { get; set; }
+        public int Level { get; set; }
+        public ClassType HeroClass { get; set; }
+
+        {
+            HeroClass = heroClass;
+            Level = 1;
+            Experience = 0;
+
+            if (heroClass == ClassType.RuneWarrior) { Health = 150; AttackPower = 25; }
+            else if (heroClass == ClassType.NumberMage) { Health = 90; AttackPower = 40; }
+            else if (heroClass == ClassType.ShadowAlgorithm) { Health = 80; AttackPower = 30; }
+        }
+
+        public void LevelUp()
+        {
+            Level++;
+            Health += 20;
+            AttackPower += 5;
+            Console.WriteLine($"{Name} leveled up to level {Level}!");
+        }
+
+        public void GainXP(int points)
+        {
+            Experience += points;
+            if (Experience >= Level * 100)
+            {
+                LevelUp();
+            }
+        }
+
+        public int Attack(Character target)
+        {
+            target.Health -= AttackPower;
+            return AttackPower;
+        }
     }
 }

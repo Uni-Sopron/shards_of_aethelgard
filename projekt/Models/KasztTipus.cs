@@ -1,6 +1,9 @@
-public enum KasztTipus
+namespace Aethelgard.Models
 {
-	RunaHarcos,
-	SzamMagus,
-	ArnyekAlgoritmus
+	public enum ClassType
+	{
+		RuneWarrior,
+		NumberMage,
+		ShadowAlgorithm
+	}
 }

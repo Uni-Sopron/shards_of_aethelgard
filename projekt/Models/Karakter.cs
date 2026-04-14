@@ -1,17 +1,23 @@
-class Character
+using System;
+
+namespace Aethelgard.Models
 {
-    public string Name { get; set; }
-    public int Health { get; set; }
-    public int AttackPower { get; set; }
-    public Character(string name, int health, int attackPower)
+    public abstract class Character
     {
-        Name = name;
-        Health = health;
-        AttackPower = attackPower;
-    }
-    public void Attack(Character target)
-    {
-        target.Health -= AttackPower;
-        Console.WriteLine($"{Name} attacks {target.Name} for {AttackPower} damage!");
+        public string Name { get; set; }
+        public int Health { get; set; }
+        public int AttackPower { get; set; }
+
+        public Character(string name, int health, int attackPower)
+        {
+            Name = name;
+            Health = health;
+            AttackPower = attackPower;
+        }
+
+        public bool IsDead()
+        {
+            return Health <= 0;
+        }
     }
 }
