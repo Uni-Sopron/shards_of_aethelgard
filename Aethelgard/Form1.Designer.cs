@@ -38,6 +38,9 @@
             txtPlayerName = new TextBox();
             label1 = new Label();
             cmbClassSelect = new ComboBox();
+            btnSave = new Button();
+            btnLoad = new Button();
+            btnNextEnemy = new Button();
             SuspendLayout();
             // 
             // lblPlayerHp
@@ -71,7 +74,6 @@
             lblEnemyHp.Size = new Size(100, 20);
             lblEnemyHp.TabIndex = 2;
             lblEnemyHp.Text = "Ellenség HP: -";
-            lblEnemyHp.Click += lblEnemyHp_Click;
             // 
             // rtbLog
             // 
@@ -126,11 +128,45 @@
             cmbClassSelect.Size = new Size(151, 28);
             cmbClassSelect.TabIndex = 9;
             // 
+            // btnSave
+            // 
+            btnSave.Location = new Point(694, 33);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(94, 29);
+            btnSave.TabIndex = 10;
+            btnSave.Text = "Mentés";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
+            // 
+            // btnLoad
+            // 
+            btnLoad.Location = new Point(694, 75);
+            btnLoad.Name = "btnLoad";
+            btnLoad.Size = new Size(94, 29);
+            btnLoad.TabIndex = 11;
+            btnLoad.Text = "Betöltés";
+            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.Click += btnLoad_Click;
+            // 
+            // btnNextEnemy
+            // 
+            btnNextEnemy.Enabled = false;
+            btnNextEnemy.Location = new Point(324, 355);
+            btnNextEnemy.Name = "btnNextEnemy";
+            btnNextEnemy.Size = new Size(107, 31);
+            btnNextEnemy.TabIndex = 12;
+            btnNextEnemy.Text = "Következő";
+            btnNextEnemy.UseVisualStyleBackColor = true;
+            btnNextEnemy.Click += btnNextEnemy_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnNextEnemy);
+            Controls.Add(btnLoad);
+            Controls.Add(btnSave);
             Controls.Add(cmbClassSelect);
             Controls.Add(label1);
             Controls.Add(txtPlayerName);
@@ -160,5 +196,8 @@
         private TextBox txtPlayerName;
         private Label label1;
         private ComboBox cmbClassSelect;
+        private Button btnSave;
+        private Button btnLoad;
+        private Button btnNextEnemy;
     }
 }

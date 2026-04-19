@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using Aethelgard.Controllers;
-using Aethelgard.Models; // Ezt is be kell húzni a Kasztok (ClassType) miatt!
+using Aethelgard.Models;
 
 namespace Aethelgard
 {
@@ -16,30 +16,24 @@ namespace Aethelgard
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // A támadás gomb letiltása, amíg nem indítanak játékot
             btnAttack.Enabled = false;
 
-            // 1. Kasztok hozzáadása a ComboBox-hoz
             cmbClassSelect.Items.Add("Rúnaharcos");
             cmbClassSelect.Items.Add("Számmágus");
             cmbClassSelect.Items.Add("Árnyék-Algoritmus");
 
-            // 2. Alapértelmezett kiválasztás, hogy ne legyen üres a mező induláskor
             cmbClassSelect.SelectedIndex = 0;
 
-            // Alapértelmezett név beállítása a TextBox-ban
             txtPlayerName.Text = "Ismeretlen Vándor";
         }
 
-        // 2. AZ ÚJ JÁTÉK INDÍTÁSA GOMB ESEMÉNYE
+        // ÚJ JÁTÉK INDÍTÁSA
         private void btnStartGame_Click(object sender, EventArgs e)
         {
-            // 1. Név kiolvasása a felületről
             string playerName = txtPlayerName.Text;
 
-            // 2. A kiválasztott kaszt szövegének átalakítása Enum-má
             string selectedText = cmbClassSelect.SelectedItem.ToString();
-            ClassType selectedClass = ClassType.RuneWarrior; // Alapérték
+            ClassType selectedClass = ClassType.RuneWarrior;
 
             if (selectedText == "Rúnaharcos")
             {
@@ -54,16 +48,14 @@ namespace Aethelgard
                 selectedClass = ClassType.ShadowAlgorithm;
             }
 
-            // 3. A játék indítása a VALÓDI adatokkal
             _gameManager.StartNewGame(playerName, selectedClass);
 
-            // 4. Felület frissítése
-            rtbLog.Text = $"A játék elkezdődött! Üdvözlünk, {playerName}!\r\nEgy Bináris Farkas állja utad.\r\n";
+            rtbLog.Text = $"A játék elkezdődött! Üdvözlünk, {playerName}!\r\nEgy {_gameManager.TestEnemy.Name} állja utad.\r\n";
             btnAttack.Enabled = true;
             UpdateStatus();
         }
 
-        // 3. A TÁMADÁS GOMB ESEMÉNYE
+        // TÁMADÁS
         private void btnAttack_Click(object sender, EventArgs e)
         {
             string roundResult = _gameManager.PlayCombatRound();
@@ -72,22 +64,55 @@ namespace Aethelgard
 
             UpdateStatus();
 
-            if (_gameManager.CurrentPlayer.IsDead() || _gameManager.TestEnemy.IsDead())
+            if (_gameManager.TestEnemy.IsDead())
             {
                 btnAttack.Enabled = false;
+                btnNextEnemy.Enabled = true;
+            }
+            else if (_gameManager.CurrentPlayer.IsDead())
+            {
+                btnAttack.Enabled = false;
+                rtbLog.Text = "A játéknak vége. Tölts be egy mentést, vagy indíts új játékot.\r\n" + rtbLog.Text;
             }
         }
 
-        // 4. ÁLLAPOTFRISSÍTŐ METÓDUS
+
+        // ÁLLAPOTFRISSÍTŐ METÓDUS
         private void UpdateStatus()
         {
             lblPlayerHp.Text = $"Te HP-d: {_gameManager.CurrentPlayer.Health}";
             lblEnemyHp.Text = $"{_gameManager.TestEnemy.Name} HP-ja: {_gameManager.TestEnemy.Health}";
         }
 
-        private void lblEnemyHp_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
+            _gameManager.SaveGame();
+            rtbLog.Text = "Játék sikeresen mentve az adatbázisba!\r\n" + rtbLog.Text;
+        }
 
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            if (_gameManager.LoadGame())
+            {
+                rtbLog.Text = $"Adatbázis betöltve! Üdv újra, {_gameManager.CurrentPlayer.Name} (Szint: {_gameManager.CurrentPlayer.Level})!\r\n" + rtbLog.Text;
+                UpdateStatus();
+                btnAttack.Enabled = true;
+            }
+            else
+            {
+                rtbLog.Text = "Nem található mentett játék az adatbázisban.\r\n" + rtbLog.Text;
+            }
+        }
+
+        private void btnNextEnemy_Click(object sender, EventArgs e)
+        {
+            _gameManager.SpawnNextEnemy();
+
+            rtbLog.Text = $"\r\n--- ÚJ KÜZDELEM ---\r\nEgy {_gameManager.TestEnemy.Name} jelenik meg!\r\n" + rtbLog.Text;
+
+            UpdateStatus();
+            btnAttack.Enabled = true;
+            btnNextEnemy.Enabled = false;
         }
     }
 }
