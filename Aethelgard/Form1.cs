@@ -7,7 +7,6 @@ namespace Aethelgard
 {
     public partial class Form1 : Form
     {
-        // 1. ITT HOZZUK LÉTRE A MENEDZSERT!
         private GameManager _gameManager = new GameManager();
 
         public Form1()
@@ -17,39 +16,62 @@ namespace Aethelgard
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Opcionális: Alapból letilthatjuk a támadás gombot, amíg nem indult el a játék
+            // A támadás gomb letiltása, amíg nem indítanak játékot
             btnAttack.Enabled = false;
+
+            // 1. Kasztok hozzáadása a ComboBox-hoz
+            cmbClassSelect.Items.Add("Rúnaharcos");
+            cmbClassSelect.Items.Add("Számmágus");
+            cmbClassSelect.Items.Add("Árnyék-Algoritmus");
+
+            // 2. Alapértelmezett kiválasztás, hogy ne legyen üres a mező induláskor
+            cmbClassSelect.SelectedIndex = 0;
+
+            // Alapértelmezett név beállítása a TextBox-ban
+            txtPlayerName.Text = "Ismeretlen Vándor";
         }
 
         // 2. AZ ÚJ JÁTÉK INDÍTÁSA GOMB ESEMÉNYE
         private void btnStartGame_Click(object sender, EventArgs e)
         {
-            // A 2. mérföldkőhöz egyelőre fixen bedrótozzuk az adatokat (később majd TextBox-ból olvassuk ki)
-            string playerName = "Teszt Hős";
-            ClassType selectedClass = ClassType.NumberMage;
+            // 1. Név kiolvasása a felületről
+            string playerName = txtPlayerName.Text;
 
-            // Szólunk a menedzsernek, hogy indítsa el a játékot
+            // 2. A kiválasztott kaszt szövegének átalakítása Enum-má
+            string selectedText = cmbClassSelect.SelectedItem.ToString();
+            ClassType selectedClass = ClassType.RuneWarrior; // Alapérték
+
+            if (selectedText == "Rúnaharcos")
+            {
+                selectedClass = ClassType.RuneWarrior;
+            }
+            else if (selectedText == "Számmágus")
+            {
+                selectedClass = ClassType.NumberMage;
+            }
+            else if (selectedText == "Árnyék-Algoritmus")
+            {
+                selectedClass = ClassType.ShadowAlgorithm;
+            }
+
+            // 3. A játék indítása a VALÓDI adatokkal
             _gameManager.StartNewGame(playerName, selectedClass);
 
-            // Frissítjük a felületet
-            rtbLog.Text = "A játék elkezdődött! Egy Bináris Farkas állja utad.\r\n";
-            btnAttack.Enabled = true; // Bekapcsoljuk a támadás gombot
-            UpdateStatus(); // Kiírjuk a kezdő életerőket
+            // 4. Felület frissítése
+            rtbLog.Text = $"A játék elkezdődött! Üdvözlünk, {playerName}!\r\nEgy Bináris Farkas állja utad.\r\n";
+            btnAttack.Enabled = true;
+            UpdateStatus();
         }
 
-        // 3. A TÁMADÁS GOMB ESEMÉNYE (Ez a te kódod, kicsit finomítva)
+        // 3. A TÁMADÁS GOMB ESEMÉNYE
         private void btnAttack_Click(object sender, EventArgs e)
         {
-            // Lefuttatjuk a kört a logikában
             string roundResult = _gameManager.PlayCombatRound();
 
-            // Frissítjük a szöveges naplót
             rtbLog.Text = roundResult + "\r\n" + rtbLog.Text;
 
-            // Vizuálisan frissítjük az életerőket
             UpdateStatus();
 
-            // Ellenőrizzük, vége-e a játéknak, hogy letiltsuk a gombot
             if (_gameManager.CurrentPlayer.IsDead() || _gameManager.TestEnemy.IsDead())
             {
                 btnAttack.Enabled = false;
@@ -59,7 +81,6 @@ namespace Aethelgard
         // 4. ÁLLAPOTFRISSÍTŐ METÓDUS
         private void UpdateStatus()
         {
-            // Kiírjuk az aktuális számokat a felületre
             lblPlayerHp.Text = $"Te HP-d: {_gameManager.CurrentPlayer.Health}";
             lblEnemyHp.Text = $"{_gameManager.TestEnemy.Name} HP-ja: {_gameManager.TestEnemy.Health}";
         }

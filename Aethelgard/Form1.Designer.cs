@@ -35,6 +35,9 @@
             rtbLog = new RichTextBox();
             btnAttack = new Button();
             btnStartGame = new Button();
+            txtPlayerName = new TextBox();
+            label1 = new Label();
+            cmbClassSelect = new ComboBox();
             SuspendLayout();
             // 
             // lblPlayerHp
@@ -80,7 +83,7 @@
             // 
             // btnAttack
             // 
-            btnAttack.Location = new Point(369, 392);
+            btnAttack.Location = new Point(324, 392);
             btnAttack.Name = "btnAttack";
             btnAttack.Size = new Size(107, 46);
             btnAttack.TabIndex = 5;
@@ -90,7 +93,7 @@
             // 
             // btnStartGame
             // 
-            btnStartGame.Location = new Point(570, 398);
+            btnStartGame.Location = new Point(641, 402);
             btnStartGame.Name = "btnStartGame";
             btnStartGame.Size = new Size(94, 29);
             btnStartGame.TabIndex = 6;
@@ -98,11 +101,39 @@
             btnStartGame.UseVisualStyleBackColor = true;
             btnStartGame.Click += btnStartGame_Click;
             // 
+            // txtPlayerName
+            // 
+            txtPlayerName.Location = new Point(491, 402);
+            txtPlayerName.Name = "txtPlayerName";
+            txtPlayerName.Size = new Size(125, 27);
+            txtPlayerName.TabIndex = 7;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(510, 379);
+            label1.Name = "label1";
+            label1.Size = new Size(73, 20);
+            label1.TabIndex = 8;
+            label1.Text = "Hős neve:";
+            // 
+            // cmbClassSelect
+            // 
+            cmbClassSelect.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbClassSelect.FormattingEnabled = true;
+            cmbClassSelect.Location = new Point(77, 401);
+            cmbClassSelect.Name = "cmbClassSelect";
+            cmbClassSelect.Size = new Size(151, 28);
+            cmbClassSelect.TabIndex = 9;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(cmbClassSelect);
+            Controls.Add(label1);
+            Controls.Add(txtPlayerName);
             Controls.Add(btnStartGame);
             Controls.Add(btnAttack);
             Controls.Add(rtbLog);
@@ -126,5 +157,8 @@
         private RichTextBox rtbLog;
         private Button btnAttack;
         private Button btnStartGame;
+        private TextBox txtPlayerName;
+        private Label label1;
+        private ComboBox cmbClassSelect;
     }
 }

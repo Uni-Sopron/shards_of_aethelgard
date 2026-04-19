@@ -12,37 +12,37 @@ namespace Aethelgard.Controllers
         {
             CurrentPlayer = new Player(name, heroClass);
 
-            TestEnemy = new Enemy("Binary Wolf", 50, 10, "Beast");
+            TestEnemy = new Enemy("Bináris Farkas", 50, 10, "Állat");
         }
 
         public string PlayCombatRound()
         {
             if (CurrentPlayer == null || TestEnemy == null)
-                return "Error: No active game!";
+                return "Nincs még harc!";
 
             if (CurrentPlayer.IsDead() || TestEnemy.IsDead())
-                return "The combat is already over!";
+                return "A csatának vége!";
 
             string combatLog = "";
 
             // --- PLAYER'S TURN ---
             int playerDamage = CurrentPlayer.Attack(TestEnemy);
-            combatLog += $"{CurrentPlayer.Name} attacks! Damage: {playerDamage}. Wolf HP: {TestEnemy.Health}\r\n";
+            combatLog += $"{CurrentPlayer.Name} támad! Sebzés: {playerDamage}. Ellenség HP-ja: {TestEnemy.Health}\r\n";
 
             if (TestEnemy.IsDead())
             {
-                combatLog += "Victory! The Binary Wolf has been defeated.";
+                combatLog += "Győzelem! Az ellenség elhullott.";
                 CurrentPlayer.GainXP(50);
                 return combatLog;
             }
 
             // --- ENEMY'S TURN ---
             int enemyDamage = TestEnemy.AutoAttack(CurrentPlayer);
-            combatLog += $"{TestEnemy.Name} retaliates! Damage: {enemyDamage}. Your HP: {CurrentPlayer.Health}\r\n";
+            combatLog += $"{TestEnemy.Name} visszatámad! Sebzés: {enemyDamage}. A te HP-d: {CurrentPlayer.Health}\r\n";
 
             if (CurrentPlayer.IsDead())
             {
-                combatLog += "Defeat! The darkness consumes you...";
+                combatLog += "Vereség! A Sötétség elnyelt!";
             }
 
             return combatLog;
