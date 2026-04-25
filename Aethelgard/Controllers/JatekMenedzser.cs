@@ -1,5 +1,5 @@
 using System;
-using Microsoft.Data.Sqlite;
+using System.Linq;
 using Aethelgard.Models;
 
 namespace Aethelgard.Controllers
@@ -9,32 +9,13 @@ namespace Aethelgard.Controllers
         public Player CurrentPlayer { get; private set; }
         public Enemy TestEnemy { get; private set; }
 
-        private string connectionString = "Data Source=aethelgard_save.db";
-
         public GameManager()
         {
-            InitializeDatabase();
-        }
-
-        private void InitializeDatabase()
-        {
-            using (var connection = new SqliteConnection(connectionString))
+            using (var db = new GameDbContext())
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-
-                command.CommandText = @"
-                    CREATE TABLE IF NOT EXISTS PlayerSaves (
-                        Name TEXT PRIMARY KEY,
-                        HeroClass TEXT,
-                        Level INTEGER,
-                        Experience INTEGER
-                    );
-                ";
-                command.ExecuteNonQuery();
+                db.Database.EnsureCreated();
             }
         }
-
         public void SpawnNextEnemy()
         {
             if (CurrentPlayer == null) return;
@@ -91,51 +72,37 @@ namespace Aethelgard.Controllers
         {
             if (CurrentPlayer == null) return;
 
-            using (var connection = new SqliteConnection(connectionString))
+            using (var db = new GameDbContext())
             {
-                connection.Open();
-                var command = connection.CreateCommand();
+                var existingPlayer = db.Players.Find(CurrentPlayer.Name);
 
-                command.CommandText = @"
-                    INSERT OR REPLACE INTO PlayerSaves (Name, HeroClass, Level, Experience) 
-                    VALUES ($name, $class, $level, $exp);
-                ";
-
-                command.Parameters.AddWithValue("$name", CurrentPlayer.Name);
-                command.Parameters.AddWithValue("$class", CurrentPlayer.HeroClass.ToString());
-                command.Parameters.AddWithValue("$level", CurrentPlayer.Level);
-                command.Parameters.AddWithValue("$exp", CurrentPlayer.Experience);
-
-                command.ExecuteNonQuery();
+                if (existingPlayer != null)
+                {
+                    existingPlayer.Level = CurrentPlayer.Level;
+                    existingPlayer.Experience = CurrentPlayer.Experience;
+                    existingPlayer.Health = CurrentPlayer.Health;
+                    existingPlayer.AttackPower = CurrentPlayer.AttackPower;
+                }
+                else
+                {
+                    db.Players.Add(CurrentPlayer);
+                }
+                db.SaveChanges();
             }
         }
 
         // --- ADATBÁZIS BETÖLTÉS ---
         public bool LoadGame()
         {
-            using (var connection = new SqliteConnection(connectionString))
+            using (var db = new GameDbContext())
             {
-                connection.Open();
-                var command = connection.CreateCommand();
+                var loadedPlayer = db.Players.FirstOrDefault();
 
-                command.CommandText = "SELECT Name, HeroClass, Level, Experience FROM PlayerSaves LIMIT 1;";
-
-                using (var reader = command.ExecuteReader())
+                if (loadedPlayer != null)
                 {
-                    if (reader.Read())
-                    {
-                        string name = reader.GetString(0);
-                        ClassType heroClass = (ClassType)Enum.Parse(typeof(ClassType), reader.GetString(1));
-                        int level = reader.GetInt32(2);
-                        int exp = reader.GetInt32(3);
-
-                        CurrentPlayer = new Player(name, heroClass);
-                        CurrentPlayer.Level = level;
-                        CurrentPlayer.Experience = exp;
-
-                        SpawnNextEnemy();
-                        return true;
-                    }
+                    CurrentPlayer = loadedPlayer;
+                    SpawnNextEnemy();
+                    return true;
                 }
             }
             return false;

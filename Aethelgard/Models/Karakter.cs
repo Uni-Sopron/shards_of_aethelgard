@@ -1,12 +1,15 @@
-using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Aethelgard.Models
 {
     public abstract class Character
     {
+        [Key]
         public string Name { get; set; }
         public int Health { get; set; }
         public int AttackPower { get; set; }
+
+        public Character() { }
 
         public Character(string name, int health, int attackPower)
         {
@@ -15,9 +18,6 @@ namespace Aethelgard.Models
             AttackPower = attackPower;
         }
 
-        public bool IsDead()
-        {
-            return Health <= 0;
-        }
+        public bool IsDead() => Health <= 0;
     }
 }
