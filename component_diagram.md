@@ -4,23 +4,23 @@ Az alábbi komponens diagram a játék fizikai felépítését és a technológi
 
 ```mermaid
 graph TD
-    subgraph Felhasználói Felület (Presentation Layer)
+    subgraph UI [Felhasználói Felület]
         MF[MenuForm.cs<br/>Főmenü]
         HF[HarcForm.cs<br/>Harctér és Hub]
         PF[PuzzleForm.cs<br/>Rejtvény ablak]
         SF[StoryForm.cs<br/>Történet popup]
     end
 
-    subgraph Alkalmazás Logika (Business Logic Layer)
+    subgraph BLL [Alkalmazás Logika]
         GM[GameManager.cs<br/>Központi Vezérlő]
     end
 
-    subgraph Adatmodell és Perzisztencia (Data Layer)
+    subgraph DAL [Adatmodell és Perzisztencia]
         Models[Modellek osztályai<br/>Character, Player, Enemy, Puzzle]
         EF[AppDbContext.cs<br/>EF Core Context]
     end
 
-    subgraph Infrastruktúra és Tárolás (Storage)
+    subgraph Storage [Infrastruktúra és Tárolás]
         DB[(SQLite Adatbázis<br/>aethelgard_game.db)]
     end
 
