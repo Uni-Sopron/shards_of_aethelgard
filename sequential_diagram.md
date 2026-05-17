@@ -1,4 +1,3 @@
-```markdown
 ## Szekvenciadiagram: Egy harci kör lefolyása
 
 Az alábbi szekvenciadiagram egy alapvető harci kör (sima támadás) folyamatát mutatja be, kiemelve a szoftver háromrétegű (Nézet - Vezérlő - Modell) architektúrájában történő metódushívásokat.
