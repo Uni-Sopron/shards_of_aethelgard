@@ -7,6 +7,8 @@ public abstract class Character
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public int AttackPower { get; set; }
+    public int Mana { get; set; }
+    public int MaxMana { get; set; }
 
     public Character() { }
 
@@ -15,6 +17,8 @@ public abstract class Character
         Name = name;
         MaxHealth = health;
         Health = health;
+        MaxMana = 50;
+        Mana = 50;
         AttackPower = attackPower;
     }
 

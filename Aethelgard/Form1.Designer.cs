@@ -41,12 +41,13 @@
             btnSave = new Button();
             btnLoad = new Button();
             btnNextEnemy = new Button();
+            btnSpecialAttack = new Button();
             SuspendLayout();
             // 
             // lblPlayerHp
             // 
             lblPlayerHp.AutoSize = true;
-            lblPlayerHp.Location = new Point(133, 289);
+            lblPlayerHp.Location = new Point(137, 289);
             lblPlayerHp.Name = "lblPlayerHp";
             lblPlayerHp.Size = new Size(75, 20);
             lblPlayerHp.TabIndex = 0;
@@ -85,7 +86,7 @@
             // 
             // btnAttack
             // 
-            btnAttack.Location = new Point(324, 392);
+            btnAttack.Location = new Point(243, 393);
             btnAttack.Name = "btnAttack";
             btnAttack.Size = new Size(107, 46);
             btnAttack.TabIndex = 5;
@@ -159,11 +160,21 @@
             btnNextEnemy.UseVisualStyleBackColor = true;
             btnNextEnemy.Click += btnNextEnemy_Click;
             // 
+            // btnSpecialAttack
+            // 
+            btnSpecialAttack.Location = new Point(356, 393);
+            btnSpecialAttack.Name = "btnSpecialAttack";
+            btnSpecialAttack.Size = new Size(110, 46);
+            btnSpecialAttack.TabIndex = 13;
+            btnSpecialAttack.Text = "Képesség";
+            btnSpecialAttack.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnSpecialAttack);
             Controls.Add(btnNextEnemy);
             Controls.Add(btnLoad);
             Controls.Add(btnSave);
@@ -199,5 +210,6 @@
         private Button btnSave;
         private Button btnLoad;
         private Button btnNextEnemy;
+        private Button btnSpecialAttack;
     }
 }

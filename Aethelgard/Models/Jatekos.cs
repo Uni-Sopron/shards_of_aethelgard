@@ -25,6 +25,8 @@ namespace Aethelgard.Models
             Level++;
             MaxHealth += 20;
             Health = MaxHealth;
+            MaxMana += 15;
+            Mana = MaxMana;
             AttackPower += 5;
             Console.WriteLine($"{Name} leveled up to level {Level}!");
         }
@@ -42,6 +44,40 @@ namespace Aethelgard.Models
         {
             target.Health -= AttackPower;
             return AttackPower;
+        }
+        public string UseSpecialAbility(Enemy target)
+        {
+            if (Mana < 20) return "Nincs elég Manád a képességhez!";
+
+            Mana -= 20;
+            string result = "";
+
+            switch (HeroClass)
+            {
+                case ClassType.RuneWarrior:
+                    int heavyDmg = AttackPower * 2;
+                    target.Health -= heavyDmg;
+                    result = $"[KÉPESSÉG] Rúnacsapás! Hatalmasat sóztál oda: {heavyDmg} sebzés!";
+                    break;
+
+                case ClassType.NumberMage:
+                    int magicDmg = AttackPower + 30;
+                    target.Health -= magicDmg;
+                    result = $"[KÉPESSÉG] Osztás Nullával! A valóság meghasad: {magicDmg} sebzés!";
+                    break;
+
+                case ClassType.ShadowAlgorithm:
+                    int drainDmg = AttackPower + 10;
+                    target.Health -= drainDmg;
+
+                    Health += drainDmg;
+                    if (Health > MaxHealth) Health = MaxHealth;
+
+                    result = $"[KÉPESSÉG] Adatszivárgás! Megcsapoltad az ellenfelet, és gyógyultál {drainDmg} HP-t!";
+                    break;
+            }
+
+            return result;
         }
     }
 }

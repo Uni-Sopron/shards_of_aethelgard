@@ -75,7 +75,21 @@ namespace Aethelgard
                 rtbLog.Text = "A játéknak vége. Tölts be egy mentést, vagy indíts új játékot.\r\n" + rtbLog.Text;
             }
         }
+        private void btnSpecialAttack_Click(object sender, EventArgs e)
+        {
+            // A speciális harci kört hívjuk meg
+            string roundResult = _gameManager.PlaySpecialRound();
+            rtbLog.Text = roundResult + "\r\n" + rtbLog.Text;
+            UpdateStatus();
 
+            // Szokásos ellenőrzések a gombok letiltására
+            if (_gameManager.TestEnemy != null && _gameManager.TestEnemy.IsDead())
+            {
+                btnAttack.Enabled = false;
+                btnSpecialAttack.Enabled = false;
+                btnNextEnemy.Enabled = true;
+            }
+        }
 
         // ÁLLAPOTFRISSÍTŐ METÓDUS
         private void UpdateStatus()
@@ -83,7 +97,9 @@ namespace Aethelgard
             // 1. Játékos adatainak frissítése (Biztonsági ellenőrzéssel)
             if (_gameManager.CurrentPlayer != null)
             {
-                lblPlayerHp.Text = $"Te HP-d: {_gameManager.CurrentPlayer.Health}";
+                lblPlayerHp.Text = $"HP: {_gameManager.CurrentPlayer.Health}/{_gameManager.CurrentPlayer.MaxHealth} " +
+                    $"| Mana:" +
+                    $" {_gameManager.CurrentPlayer.Mana}/{_gameManager.CurrentPlayer.MaxMana}";
             }
             else
             {

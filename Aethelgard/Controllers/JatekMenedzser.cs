@@ -67,11 +67,35 @@ namespace Aethelgard.Controllers
                 combatLog += $"Győzelem! A(z) {TestEnemy.Name} elpusztult.\r\n";
                 CurrentPlayer.GainXP(50);
                 combatLog += $"[+] Kaptál 50 Tapasztalatot! Jelenlegi szinted: {CurrentPlayer.Level}.\r\n";
-                // Itt NEM hívjuk meg a SpawnNextEnemy-t, hogy ne legyen automatikus a folytatás
                 return combatLog;
             }
 
             // Ellenfél visszatámadása
+            int enemyDamage = TestEnemy.AutoAttack(CurrentPlayer);
+            combatLog += $"{TestEnemy.Name} visszatámad! Sebzés: {enemyDamage}. Te HP-d: {CurrentPlayer.Health}\r\n";
+
+            if (CurrentPlayer.IsDead()) combatLog += "Vereség! A sötétség elnyelt...";
+
+            return combatLog;
+        }
+        public string PlaySpecialRound()
+        {
+            if (CurrentPlayer == null || TestEnemy == null) return "Hiba: Nincs aktív játék!";
+            if (CurrentPlayer.IsDead() || TestEnemy.IsDead()) return "A harc már véget ért!";
+
+            if (CurrentPlayer.Mana < 20) return "Nincs elég Manád! Használj sima támadást.";
+
+            string combatLog = "";
+
+            combatLog += CurrentPlayer.UseSpecialAbility(TestEnemy) + "\r\n";
+
+            if (TestEnemy.IsDead())
+            {
+                combatLog += $"Győzelem! A(z) {TestEnemy.Name} elpusztult.\r\n";
+                CurrentPlayer.GainXP(50);
+                return combatLog;
+            }
+
             int enemyDamage = TestEnemy.AutoAttack(CurrentPlayer);
             combatLog += $"{TestEnemy.Name} visszatámad! Sebzés: {enemyDamage}. Te HP-d: {CurrentPlayer.Health}\r\n";
 
@@ -94,6 +118,8 @@ namespace Aethelgard.Controllers
                     existingPlayer.Experience = CurrentPlayer.Experience;
                     existingPlayer.Health = CurrentPlayer.Health;
                     existingPlayer.MaxHealth = CurrentPlayer.MaxHealth;
+                    existingPlayer.Mana = CurrentPlayer.Mana;
+                    existingPlayer.MaxMana = CurrentPlayer.MaxMana;
                     existingPlayer.AttackPower = CurrentPlayer.AttackPower;
                     db.Entry(existingPlayer).State = EntityState.Modified;
                 }
@@ -114,8 +140,6 @@ namespace Aethelgard.Controllers
                 if (loadedPlayer != null)
                 {
                     CurrentPlayer = loadedPlayer;
-                    // Fontos: Az életerőt a mentett állapotból vesszük át, 
-                    // nem generálunk rögtön ellenfelet
                     TestEnemy = null;
                     return true;
                 }
