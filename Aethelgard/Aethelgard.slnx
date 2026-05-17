@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../Aethelgard.Tests/Aethelgard.Tests.csproj" Id="f071ae7c-455c-4c83-9443-4c1efde16100" />
   <Project Path="Aethelgard.csproj" />
 </Solution>
