@@ -26,4 +26,4 @@ jobs:
       run: dotnet build Aethelgard/Aethelgard.slnx --no-restore --configuration Release
 
     - name: Run Unit Tests
-      run: dotnet test Aethelgard/Aethelgard.slnx --no-build --verbosity normal
+      run: dotnet test Aethelgard/Aethelgard.slnx --no-build --configuration Release --verbosity normal
