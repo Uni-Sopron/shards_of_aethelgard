@@ -20,10 +20,10 @@ jobs:
         dotnet-version: '10.0.x' 
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore Aethelgard/Aethelgard.slnx
 
     - name: Build solution
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build Aethelgard/Aethelgard.slnx --no-restore --configuration Release
 
     - name: Run Unit Tests
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test Aethelgard/Aethelgard.slnx --no-build --verbosity normal
