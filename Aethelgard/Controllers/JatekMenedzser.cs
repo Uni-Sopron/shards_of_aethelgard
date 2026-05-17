@@ -9,6 +9,7 @@ namespace Aethelgard.Controllers
     {
         public Player CurrentPlayer { get; private set; }
         public Enemy TestEnemy { get; private set; }
+        public Puzzle CurrentPuzzle { get; private set; }
 
         public GameManager()
         {
@@ -43,6 +44,51 @@ namespace Aethelgard.Controllers
                     break;
             }
         }
+        public void GeneratePuzzle()
+        {
+            // Ide később be lehet kötni egy adatbázist, most a prototípushoz véletlenszerűen adunk egyet
+            Random rnd = new Random();
+            int type = rnd.Next(1, 4);
+
+            if (type == 1)
+                CurrentPuzzle = new Puzzle("Mennyi 150 és 2.5 szorzata?", 375, 100);
+            else if (type == 2)
+                CurrentPuzzle = new Puzzle("Mi a 4096 négyzetgyöke?", 64, 150);
+            else
+                CurrentPuzzle = new Puzzle("Ha 5 gép 5 perc alatt 5 terméket gyárt, hány perc alatt gyárt 100 gép 100 terméket?", 5, 200);
+        }
+
+        public string SolvePuzzle(double playerGuess)
+        {
+            if (CurrentPuzzle == null) return "Nincs aktív rejtvény!";
+
+            double exactAnswer = CurrentPuzzle.CorrectAnswer;
+
+            double marginOfError = Math.Abs(exactAnswer * 0.01);
+
+            double difference = Math.Abs(playerGuess - exactAnswer);
+
+            string log = $"[REJTVÉNY] Válaszod: {playerGuess}. A helyes válasz: {exactAnswer}.\r\n";
+
+            if (difference == 0)
+            {
+                CurrentPlayer.GainXP(CurrentPuzzle.MaxXpReward);
+                log += $"TÖKÉLETES! Megkaptad a maximális {CurrentPuzzle.MaxXpReward} XP-t.\r\n";
+            }
+            else if (difference <= marginOfError)
+            {
+                int halfXp = CurrentPuzzle.MaxXpReward / 2;
+                CurrentPlayer.GainXP(halfXp);
+                log += $"MAJDNEM PONTOS! Még a hibahatáron belül vagy. Kaptál {halfXp} XP-t.\r\n";
+            }
+            else
+            {
+                log += "HELYTELEN VÁLASZ! Nem járt érte tapasztalati pont.\r\n";
+            }
+
+            CurrentPuzzle = null;
+            return log;
+        }
 
         public void StartNewGame(string name, ClassType heroClass)
         {
@@ -53,7 +99,7 @@ namespace Aethelgard.Controllers
 
         public string PlayCombatRound()
         {
-            if (CurrentPlayer == null || TestEnemy == null) return "Hiba: Nincs aktív játék vagy ellenfél!";
+            if (CurrentPlayer == null || TestEnemy == null) return "Nincs ellenfél, ne hadonássz!";
             if (CurrentPlayer.IsDead() || TestEnemy.IsDead()) return "A harc már véget ért!";
 
             string combatLog = "";
@@ -80,7 +126,7 @@ namespace Aethelgard.Controllers
         }
         public string PlaySpecialRound()
         {
-            if (CurrentPlayer == null || TestEnemy == null) return "Hiba: Nincs aktív játék!";
+            if (CurrentPlayer == null || TestEnemy == null) return "Nincs ellenfél, ne hadonássz!";
             if (CurrentPlayer.IsDead() || TestEnemy.IsDead()) return "A harc már véget ért!";
 
             if (CurrentPlayer.Mana < 20) return "Nincs elég Manád! Használj sima támadást.";
