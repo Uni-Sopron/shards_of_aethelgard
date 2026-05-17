@@ -1,3 +1,7 @@
+```markdown
+## Szekvenciadiagram: Egy harci kör lefolyása
+
+Az alábbi szekvenciadiagram egy alapvető harci kör (sima támadás) folyamatát mutatja be, kiemelve a szoftver háromrétegű (Nézet - Vezérlő - Modell) architektúrájában történő metódushívásokat.
 
 ```mermaid
 sequenceDiagram
@@ -47,5 +51,5 @@ sequenceDiagram
         Form->>Form: Támadás letiltása, Game Over kiírása
     end
     
-    deactivate Form```
-
+    deactivate Form
+    %%
