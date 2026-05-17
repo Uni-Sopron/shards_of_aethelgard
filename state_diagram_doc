@@ -1,0 +1,33 @@
+Főmenüből történő kilépés:
+
+Esemény: "Új játék" gomb megnyomása.
+
+Feltétel: Név és Kaszt sikeresen kiválasztva.
+
+Cél: Pihenő Fázis.
+
+A Játékmenet Ciklusa (A Core Loop):
+
+Esemény: "Következő" gomb megnyomása a Pihenő fázisban.
+
+Feltétel: A háttérben futó véletlenszám-generátor eredménye (80% / 20%).
+
+Cél: Harc Fázis VAGY Rejtvény Fázis.
+
+Visszatérés a Pihenő Fázisba:
+
+Esemény (Harcból): Támadás gomb megnyomása.
+
+Feltétel: Az ellenség HP <= 0.
+
+Esemény (Rejtvényből): "Megoldás" gomb megnyomása.
+
+Feltétel: A bemenet érvényes szám (formátum ellenőrzés sikeres).
+
+Halál (Game Over):
+
+Esemény: Az ellenség automatikus visszatámadása a kör végén.
+
+Feltétel: A játékos HP <= 0.
+
+Cél: Játék Vége állapot (ahonnan csak új játék indításával vagy betöltéssel lehet folytatni).
