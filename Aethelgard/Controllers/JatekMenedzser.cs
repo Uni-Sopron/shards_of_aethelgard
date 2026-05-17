@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Aethelgard.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aethelgard.Controllers
 {
@@ -16,6 +17,8 @@ namespace Aethelgard.Controllers
                 db.Database.EnsureCreated();
             }
         }
+
+        // Új ellenfél generálása - Most már csak akkor hívódik meg, ha a játékos kéri
         public void SpawnNextEnemy()
         {
             if (CurrentPlayer == null) return;
@@ -23,42 +26,52 @@ namespace Aethelgard.Controllers
             Random rnd = new Random();
             int veletlenSzam = rnd.Next(1, 4);
 
-            // A szörnyek statisztikái a játékos SZINTJÉVEL skálázódnak!
+            // A szörnyek statisztikái a játékos szintjével skálázódnak
             int enemyHp = 40 + (CurrentPlayer.Level * 15);
             int enemyDmg = 5 + (CurrentPlayer.Level * 5);
 
-            if (veletlenSzam == 1)
-                TestEnemy = new Enemy("Bináris Farkas", enemyHp, enemyDmg, "Állat");
-            else if (veletlenSzam == 2)
-                TestEnemy = new Enemy("Logikai Lidérc", enemyHp - 10, enemyDmg + 5, "Szellem");
-            else
-                TestEnemy = new Enemy("Zéró Gólem", enemyHp + 30, enemyDmg - 2, "Gépezet");
+            switch (veletlenSzam)
+            {
+                case 1:
+                    TestEnemy = new Enemy("Bináris Farkas", enemyHp, enemyDmg, "Állat");
+                    break;
+                case 2:
+                    TestEnemy = new Enemy("Logikai Lidérc", enemyHp - 10, enemyDmg + 5, "Szellem");
+                    break;
+                default:
+                    TestEnemy = new Enemy("Zéró Gólem", enemyHp + 30, enemyDmg - 2, "Gépezet");
+                    break;
+            }
         }
 
         public void StartNewGame(string name, ClassType heroClass)
         {
             CurrentPlayer = new Player(name, heroClass);
+            // Az első harcot elindíthatjuk automatikusan, vagy ezt is rábízhatjuk a UI-ra
             SpawnNextEnemy();
         }
 
         public string PlayCombatRound()
         {
-            if (CurrentPlayer == null || TestEnemy == null) return "Hiba: Nincs aktív játék!";
+            if (CurrentPlayer == null || TestEnemy == null) return "Hiba: Nincs aktív játék vagy ellenfél!";
             if (CurrentPlayer.IsDead() || TestEnemy.IsDead()) return "A harc már véget ért!";
 
             string combatLog = "";
 
+            // Játékos támadása
             int playerDamage = CurrentPlayer.Attack(TestEnemy);
-            combatLog += $"{CurrentPlayer.Name} támad! Sebzés: {playerDamage}. Farkas HP: {TestEnemy.Health}\r\n";
+            combatLog += $"{CurrentPlayer.Name} támad! Sebzés: {playerDamage}. {TestEnemy.Name} HP: {TestEnemy.Health}\r\n";
 
             if (TestEnemy.IsDead())
             {
                 combatLog += $"Győzelem! A(z) {TestEnemy.Name} elpusztult.\r\n";
                 CurrentPlayer.GainXP(50);
                 combatLog += $"[+] Kaptál 50 Tapasztalatot! Jelenlegi szinted: {CurrentPlayer.Level}.\r\n";
+                // Itt NEM hívjuk meg a SpawnNextEnemy-t, hogy ne legyen automatikus a folytatás
                 return combatLog;
             }
 
+            // Ellenfél visszatámadása
             int enemyDamage = TestEnemy.AutoAttack(CurrentPlayer);
             combatLog += $"{TestEnemy.Name} visszatámad! Sebzés: {enemyDamage}. Te HP-d: {CurrentPlayer.Health}\r\n";
 
@@ -67,7 +80,6 @@ namespace Aethelgard.Controllers
             return combatLog;
         }
 
-        // --- ADATBÁZIS MENTÉS ---
         public void SaveGame()
         {
             if (CurrentPlayer == null) return;
@@ -81,7 +93,9 @@ namespace Aethelgard.Controllers
                     existingPlayer.Level = CurrentPlayer.Level;
                     existingPlayer.Experience = CurrentPlayer.Experience;
                     existingPlayer.Health = CurrentPlayer.Health;
+                    existingPlayer.MaxHealth = CurrentPlayer.MaxHealth;
                     existingPlayer.AttackPower = CurrentPlayer.AttackPower;
+                    db.Entry(existingPlayer).State = EntityState.Modified;
                 }
                 else
                 {
@@ -91,7 +105,6 @@ namespace Aethelgard.Controllers
             }
         }
 
-        // --- ADATBÁZIS BETÖLTÉS ---
         public bool LoadGame()
         {
             using (var db = new GameDbContext())
@@ -101,7 +114,9 @@ namespace Aethelgard.Controllers
                 if (loadedPlayer != null)
                 {
                     CurrentPlayer = loadedPlayer;
-                    SpawnNextEnemy();
+                    // Fontos: Az életerőt a mentett állapotból vesszük át, 
+                    // nem generálunk rögtön ellenfelet
+                    TestEnemy = null;
                     return true;
                 }
             }

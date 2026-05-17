@@ -23,7 +23,8 @@ namespace Aethelgard.Models
         public void LevelUp()
         {
             Level++;
-            Health += 20;
+            MaxHealth += 20;
+            Health = MaxHealth;
             AttackPower += 5;
             Console.WriteLine($"{Name} leveled up to level {Level}!");
         }

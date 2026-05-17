@@ -80,8 +80,27 @@ namespace Aethelgard
         // ÁLLAPOTFRISSÍTŐ METÓDUS
         private void UpdateStatus()
         {
-            lblPlayerHp.Text = $"Te HP-d: {_gameManager.CurrentPlayer.Health}";
-            lblEnemyHp.Text = $"{_gameManager.TestEnemy.Name} HP-ja: {_gameManager.TestEnemy.Health}";
+            // 1. Játékos adatainak frissítése (Biztonsági ellenőrzéssel)
+            if (_gameManager.CurrentPlayer != null)
+            {
+                lblPlayerHp.Text = $"Te HP-d: {_gameManager.CurrentPlayer.Health}";
+            }
+            else
+            {
+                lblPlayerHp.Text = "Te HP-d: -";
+            }
+
+            // 2. Ellenség adatainak frissítése
+            if (_gameManager.TestEnemy != null)
+            {
+                // Ha van aktív ellenség, kiírjuk az adatait
+                lblEnemyHp.Text = $"{_gameManager.TestEnemy.Name} HP-ja: {_gameManager.TestEnemy.Health}";
+            }
+            else
+            {
+                // Ha pihenő fázisban vagyunk (pl. betöltés után), ezt írjuk ki:
+                lblEnemyHp.Text = "Nincs aktív ellenség";
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -96,7 +115,8 @@ namespace Aethelgard
             {
                 rtbLog.Text = $"Adatbázis betöltve! Üdv újra, {_gameManager.CurrentPlayer.Name} (Szint: {_gameManager.CurrentPlayer.Level})!\r\n" + rtbLog.Text;
                 UpdateStatus();
-                btnAttack.Enabled = true;
+                btnAttack.Enabled = false;
+                btnNextEnemy.Enabled = true;
             }
             else
             {
