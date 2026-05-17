@@ -1,3 +1,4 @@
+```mermaid
 stateDiagram-v2
     [*] --> Főmenü : Program indítása
     
@@ -20,7 +21,7 @@ stateDiagram-v2
     }
     
     HarcFázis --> JátékVége : Játékos életereje elfogy
-    JátékVége --> [*] : Ablak bezárása
+    JátékVége --> [*] : Ablak bezárása```
 
 Főmenüből történő kilépés:\n
 Esemény: "Új játék" gomb megnyomása.\n
