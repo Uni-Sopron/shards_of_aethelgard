@@ -119,7 +119,7 @@
             MaximizeBox = false;
             Name = "HarcForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "HarcForm";
+            Text = "SoA";
             ResumeLayout(false);
             PerformLayout();
         }

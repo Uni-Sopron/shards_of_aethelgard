@@ -107,7 +107,7 @@
             MaximizeBox = false;
             Name = "MenuForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "MenuForm";
+            Text = "SoA";
             ResumeLayout(false);
             PerformLayout();
         }

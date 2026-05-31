@@ -7,6 +7,7 @@ namespace Aethelgard.Models
         public int Experience { get; set; }
         public int Level { get; set; }
         public ClassType HeroClass { get; set; }
+
         public Player() { }
 
         public Player(string name, ClassType heroClass) : base(name, 100, 20)
@@ -14,10 +15,24 @@ namespace Aethelgard.Models
             HeroClass = heroClass;
             Level = 1;
             Experience = 0;
-
-            if (heroClass == ClassType.RuneWarrior) { Health = 150; AttackPower = 25; }
-            else if (heroClass == ClassType.NumberMage) { Health = 90; AttackPower = 40; }
-            else if (heroClass == ClassType.ShadowAlgorithm) { Health = 80; AttackPower = 30; }
+            if (heroClass == ClassType.RuneWarrior)
+            {
+                MaxHealth = 150;
+                Health = 150;
+                AttackPower = 25;
+            }
+            else if (heroClass == ClassType.NumberMage)
+            {
+                MaxHealth = 90;
+                Health = 90;
+                AttackPower = 40;
+            }
+            else if (heroClass == ClassType.ShadowAlgorithm)
+            {
+                MaxHealth = 80;
+                Health = 80;
+                AttackPower = 30;
+            }
         }
 
         public void LevelUp()
@@ -31,11 +46,14 @@ namespace Aethelgard.Models
             Console.WriteLine($"{Name} leveled up to level {Level}!");
         }
 
-        public void GainXP(int points)
+        public void GainXP(int amount)
         {
-            Experience += points;
-            if (Experience >= Level * 100)
+            Experience += amount;
+            int requiredXp = Level * 100;
+
+            if (Experience >= requiredXp)
             {
+                Experience -= requiredXp;
                 LevelUp();
             }
         }
@@ -44,40 +62,6 @@ namespace Aethelgard.Models
         {
             target.Health -= AttackPower;
             return AttackPower;
-        }
-        public string UseSpecialAbility(Enemy target)
-        {
-            if (Mana < 20) return "Nincs elég Manád a képességhez!";
-
-            Mana -= 20;
-            string result = "";
-
-            switch (HeroClass)
-            {
-                case ClassType.RuneWarrior:
-                    int heavyDmg = AttackPower * 2;
-                    target.Health -= heavyDmg;
-                    result = $"[KÉPESSÉG] Rúnacsapás! Hatalmasat sóztál oda: {heavyDmg} sebzés!";
-                    break;
-
-                case ClassType.NumberMage:
-                    int magicDmg = AttackPower + 30;
-                    target.Health -= magicDmg;
-                    result = $"[KÉPESSÉG] Osztás Nullával! A valóság meghasad: {magicDmg} sebzés!";
-                    break;
-
-                case ClassType.ShadowAlgorithm:
-                    int drainDmg = AttackPower + 10;
-                    target.Health -= drainDmg;
-
-                    Health += drainDmg;
-                    if (Health > MaxHealth) Health = MaxHealth;
-
-                    result = $"[KÉPESSÉG] Adatszivárgás! Megcsapoltad az ellenfelet, és gyógyultál {drainDmg} HP-t!";
-                    break;
-            }
-
-            return result;
         }
     }
 }

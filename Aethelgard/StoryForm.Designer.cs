@@ -64,7 +64,7 @@
             MaximizeBox = false;
             Name = "StoryForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "StoryForm";
+            Text = "SoA";
             ResumeLayout(false);
         }
 

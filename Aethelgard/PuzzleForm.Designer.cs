@@ -84,7 +84,7 @@
             MaximizeBox = false;
             Name = "PuzzleForm";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "PuzzleForm";
+            Text = "SoA";
             ResumeLayout(false);
             PerformLayout();
         }

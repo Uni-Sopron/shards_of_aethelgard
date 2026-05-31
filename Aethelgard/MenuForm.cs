@@ -1,7 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-using Aethelgard.Controllers;
+﻿using Aethelgard.Controllers;
 using Aethelgard.Models;
+using System;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Aethelgard
 {
@@ -44,8 +45,26 @@ namespace Aethelgard
         // --- BETÖLTÉS ---
         private void btnLoadGame_Click(object sender, EventArgs e)
         {
-            if (_gameManager.LoadGame())
+            string playerName = txtPlayerName.Text.Trim();
+
+            if (string.IsNullOrEmpty(playerName))
             {
+                MessageBox.Show("Kérlek, add meg a karakter nevét a betöltéshez!",
+                                "Hiányzó név",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                return;
+            }
+
+            bool success = _gameManager.LoadGame(playerName);
+
+            if (success)
+            {
+                MessageBox.Show($"Üdv újra, {_gameManager.CurrentPlayer.Name}! A játék sikeresen betöltve.",
+                                "Sikeres betöltés",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+
                 HarcForm harcWindow = new HarcForm(_gameManager);
                 this.Hide();
                 harcWindow.ShowDialog();
@@ -53,7 +72,10 @@ namespace Aethelgard
             }
             else
             {
-                MessageBox.Show("Nem található korábbi mentés az adatbázisban!");
+                MessageBox.Show($"Nem található mentés '{playerName}' néven az adatbázisban!",
+                                "Mentés nem található",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
         }
 
