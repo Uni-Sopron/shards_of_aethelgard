@@ -16,6 +16,8 @@ namespace Aethelgard
             _gameManager = gameManager;
 
             UpdatePuzzleUI();
+
+            this.ActiveControl = txtPuzzleAnswer;
         }
 
         private void UpdatePuzzleUI()

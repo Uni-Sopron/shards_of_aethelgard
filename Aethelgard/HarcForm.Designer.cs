@@ -115,7 +115,10 @@
             Controls.Add(btnAttack);
             Controls.Add(lblEnemyHp);
             Controls.Add(lblPlayerHp);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "HarcForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "HarcForm";
             ResumeLayout(false);
             PerformLayout();

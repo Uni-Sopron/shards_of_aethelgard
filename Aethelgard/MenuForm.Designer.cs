@@ -103,7 +103,10 @@
             Controls.Add(btnNewGame);
             Controls.Add(cmbClassSelect);
             Controls.Add(txtPlayerName);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "MenuForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "MenuForm";
             ResumeLayout(false);
             PerformLayout();

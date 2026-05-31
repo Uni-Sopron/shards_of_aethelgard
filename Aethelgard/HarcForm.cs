@@ -62,9 +62,13 @@ namespace Aethelgard
             }
             else if (_gameManager.CurrentPlayer.IsDead())
             {
-                btnAttack.Enabled = false;
-                btnSpecialAttack.Enabled = false;
-                rtbLog.Text = "A játéknak vége. Tölts be egy mentést, vagy indíts új játékot.\r\n" + rtbLog.Text;
+                UpdateStatus();
+
+                MessageBox.Show("Sajnos elestél a harcban...\n\nA Zéró Entitás győzedelmeskedett, és a kódex elveszett. Próbáld újra!",
+                                "Game Over",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                this.Close();
             }
         }
 
@@ -80,6 +84,17 @@ namespace Aethelgard
                 btnAttack.Enabled = false;
                 btnSpecialAttack.Enabled = false;
                 btnNext.Enabled = true;
+            }
+            else if (_gameManager.CurrentPlayer.IsDead())
+            {
+                UpdateStatus();
+
+                MessageBox.Show("Sajnos elestél a harcban...\n\nA Zéró Entitás győzedelmeskedett, és a kódex elveszett. Próbáld újra!",
+                                "Game Over",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+
+                this.Close();
             }
         }
 

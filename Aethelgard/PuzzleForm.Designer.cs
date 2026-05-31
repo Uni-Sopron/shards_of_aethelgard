@@ -80,7 +80,10 @@
             Controls.Add(btnSubmitPuzzle);
             Controls.Add(txtPuzzleAnswer);
             Controls.Add(lblPuzzleError);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "PuzzleForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "PuzzleForm";
             ResumeLayout(false);
             PerformLayout();

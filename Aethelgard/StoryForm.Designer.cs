@@ -60,7 +60,10 @@
             ClientSize = new Size(800, 450);
             Controls.Add(btnClose);
             Controls.Add(rtbStoryText);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "StoryForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "StoryForm";
             ResumeLayout(false);
         }
